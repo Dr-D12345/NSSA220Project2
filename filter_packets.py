@@ -12,4 +12,3 @@ def filter(inputFile, outputFile):
 		fileline = infile.readline()
 	infile.close()
 	outfile.close()
-filter("Node1.txt", "Filered1.txt")
