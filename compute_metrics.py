@@ -10,60 +10,45 @@ def compute(host, L) :
 	i=0
 	j=0
 	k=0
-	Rtt=0.0
+	rtt=0.0
 	reply_delay=0.0
-	TTL='128'
 	hops=0
 	for x in range(0, len(L)):
 		item = L[x]
 		type = item[6]["type"].lower()
 		requestHost = item[2]
-		time_to_live = item[6]["ttl"]
 		if(type == 'request'):
 			if(requestHost == host):
 				request_sent += 1
 				request_bytes_sent += int(item[5])
 				request_data_sent += (int(item[5])-42)
 				request_time = float(item[1])
-				if (time_to_live == TTL):
-					hops+=1
-					k+=1
-				else:
-					hops+=3
-					k+=1
+				sent_ttl = int(item[6]["ttl"])
 			else:
 				request_received +=1
 				request_bytes_received += int(item[5])
 				request_data_received +=(int(item[5])-42)
 				receive_time = float(item[1])
-				if (time_to_live == TTL):
-					hops+=1
-					k+=1
-				else:
-					hops+=3
-					k+=1
 		elif(type == 'reply'):
 			if(requestHost == host):
 				replies_sent += 1
 				reply_delay += (float(item[1]) - receive_time)*1000000
 				j+=1
-				if(time_to_live == TTL):
-					hops+=1
-					k+=1
-				else:
-					hops+=3
-					k+=1
+				
 			else:
 				replies_received +=1
-				Rtt += (float(item[1])-request_time) *1000
+				rtt += (float(item[1])-request_time) *1000
 				i+=1
-				if(time_to_live == TTL):
+				if((sent_ttl-int(item[6]["ttl"]))==0):
 					hops+=1
 					k+=1
 				else:
 					hops+=3
 					k+=1
-	Avg_Rtt=Rtt/float(i)
-	Avg_reply_delay = reply_delay/float(j)
-	print(hops/k)
-	
+	avg_Rtt=rtt/float(i)
+	request_throughput = request_bytes_sent/rtt
+	request_goodput = request_data_sent/rtt
+	avg_reply_delay = reply_delay/float(j)
+	avg_hops = hops/k	
+	metrics =[request_sent, request_received, replies_sent, replies_received, request_bytes_sent, request_bytes_received, request_data_sent, request_data_received, avg_Rtt, request_throughput, request_goodput, avg_reply_delay, avg_hops]
+	return metrics
