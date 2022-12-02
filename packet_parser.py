@@ -9,10 +9,23 @@ def parse(fileName):
 			group = "No." +line
 			#print(group)
 			result = parseLine(group)
+		
 			if result!=[]:
 				packetList.append(result)
 	input.close()
 	return packetList
+def parseInfo(info):
+	matches = re.finditer("Echo \(ping\) (\w+)\s+id=(\w+), seq=(\d+\/\d+), ttl=(\d+) \(\w+ in (\d+)\)", info)
+	ty = None
+	for match in matches:
+		ty   = match.group(1)
+		id  = match.group(2)
+		seq  = match.group(3)
+		ttl  = match.group(4)
+		idCorresponding = match.group(5)
+	if (ty is None):
+		return {}
+	return { "type":ty, "id": id, "seq":seq, "ttl":ttl, "idCorresponding":idCorresponding}
 
 def parseLine(line):
 	info = line.split("\n")
@@ -28,8 +41,10 @@ def parseLine(line):
 		protcol= match.group(5)
 		length = match.group(6)     
 		extra   = match.group(7)
+	
 	if(num is None):
 		return []
+
 	"""
 	Parsing for hex
 	hexString = ""
@@ -45,4 +60,5 @@ def parseLine(line):
 	print(hexString)
 	"""				
 
-	return [num, time, ipSrc, ipDes, protcol, length, extra] 	
+	return [num, time, ipSrc, ipDes, protcol, length, parseInfo(extra)] 	
+
