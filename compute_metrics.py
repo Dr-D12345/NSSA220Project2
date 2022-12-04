@@ -45,10 +45,10 @@ def compute(host, L) :
 				else:
 					hops+=3
 					k+=1
-	avg_Rtt=rtt/float(i)
-	request_throughput = request_bytes_sent/rtt
-	request_goodput = request_data_sent/rtt
-	avg_reply_delay = reply_delay/float(j)
-	avg_hops = hops/k	
+	avg_Rtt='{:.2f}'.format(rtt/float(i))
+	request_throughput = '{:.1f}'.format(request_bytes_sent/rtt)
+	request_goodput = '{:.1f}'.format(request_data_sent/rtt)
+	avg_reply_delay = '{:.2f}'.format(reply_delay/float(j))
+	avg_hops = '{:.2f}'.format(hops/k)
 	metrics =[request_sent, request_received, replies_sent, replies_received, request_bytes_sent, request_bytes_received, request_data_sent, request_data_received, avg_Rtt, request_throughput, request_goodput, avg_reply_delay, avg_hops]
 	return metrics
