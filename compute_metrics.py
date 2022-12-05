@@ -51,4 +51,21 @@ def compute(host, L) :
 	avg_reply_delay = '{:.2f}'.format(reply_delay/float(j))
 	avg_hops = '{:.2f}'.format(hops/k)
 	metrics =[request_sent, request_received, replies_sent, replies_received, request_bytes_sent, request_bytes_received, request_data_sent, request_data_received, avg_Rtt, request_throughput, request_goodput, avg_reply_delay, avg_hops]
-	return metrics
+	
+	return format(metrics)
+def format(metrics):
+	rows = []
+	rows.append(["Echo Requests Sent", "Echo Requests Received", "Echo Replies Sent", "Echo Replies Received"])
+	rows.append([str(metrics[0]), str(metrics[1]), str(metrics[2]), str(metrics[3])])
+	rows.append(["Echo Request Bytes Sent (bytes)", "Echo Request Data Sent (bytes)"])
+	rows.append([str(metrics[4]), str(metrics[6])])
+	rows.append(["Echo Request Bytes Received (bytes)", "Echo Request Data Received (bytes)"])
+	rows.append([str(metrics[5]), str(metrics[7])])
+	rows.append([])
+	rows.append(["Average RTT (milliseconds)", str(metrics[8])])
+	rows.append(["Echo Request Throughput (kB/sec)", str(metrics[9])])
+	rows.append(["Echo Request Goodput (kB/sec)", str(metrics[10])])
+	rows.append(["Average Reply Delay (microseconds)", str(metrics[11])])
+	rows.append(["Average Echo Request Hop Count", str(metrics[12])])
+	rows.append([])
+	return rows
